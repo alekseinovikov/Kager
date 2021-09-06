@@ -2,33 +2,34 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.30"
-    application
 }
-
-group = "me.alekseinovikov.kager"
-version = "1.0-SNAPSHOT"
 
 repositories {
-    jcenter()
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
-    implementation("io.ktor:ktor-server-netty:1.6.0")
-    implementation("io.ktor:ktor-html-builder:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-}
+allprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "java")
 
-tasks.test {
-    useJUnitPlatform()
-}
+    repositories {
+        mavenCentral()
+    }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "11"
-}
+    group = "me.alekseinovikov.kager"
+    version = "1.0-SNAPSHOT"
+    java.sourceCompatibility = JavaVersion.VERSION_11
 
-application {
-    mainClass.set("ServerKt")
+    dependencies {
+        testImplementation(kotlin("test"))
+    }
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
+    tasks.withType<KotlinCompile>() {
+        kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+        kotlinOptions.jvmTarget = "11"
+    }
 }
